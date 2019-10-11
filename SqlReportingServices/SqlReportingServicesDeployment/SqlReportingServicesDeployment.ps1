@@ -113,13 +113,13 @@ param(
 	[System.Management.Automation.PSCredential]$auth = $null; #Auth incase there is one
 	if([System.String]::IsNullOrWhiteSpace($WsUsername) -or [System.String]::IsNullOrWhiteSpace($WsPassword)){  #If not use the DefaultCredential (PS session of the machine where this powershell script is executed
 		Write-Host "Creating WebService proxy using default credentials"; 
-		$ssrs =New-WebServiceProxy -Uri $WebserviceUrl -UseDefaultCredential -ErrorAction Stop;
+		$ssrs =New-WebServiceProxy -Uri $WebserviceUrl -UseDefaultCredential -ErrorAction Continue;
 	}else{#Incase there is a Webservice user-password pair, use the PSCredential of that pair
 		Write-Host "Creating WebService proxy using credentials";
 		$wsSecurePass = ConvertTo-SecureString -String $WsPassword -AsPlainText -Force
 
 		$auth = New-Object System.Management.Automation.PSCredential -ArgumentList $WsUsername,$wsSecurePass;
-		$ssrs = New-WebServiceProxy -Uri $WebserviceUrl -Credential $auth -ErrorAction Stop;
+		$ssrs = New-WebServiceProxy -Uri $WebserviceUrl -Credential $auth -ErrorAction Continue;
 	}
 
     $type = $ssrs.GetType().Namespace;
